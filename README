@@ -49,9 +49,22 @@ and we do this in css:
     }
     
     #tasks li{
-      -webkit-transform: background 0.5s ease, height 1s ease, opacity 1s ease; 
+      -webkit-transition: background 0.5s ease, height 1s ease, opacity 1s ease; 
     }
 
 This way when it is re-rendered the task will turn yellow, shrink and fade away. So we call re-render, but -oh- instead of fading away the element simply disappears. Shock! Horror!
 
-If you have a keen eye you may have noticed a problem, when we render our template we are completely replacing the html inside #main with the text of our template. This destroys our elements and creates new ones. The browser doesn't realise that the element has transitioned states and it doesn't know to animate it. We could use a bunch of JavaScript to animate it instead, or to hack at this problem to make it transition. But that sounds messy - in fact it is messy. Let's not do that. Let's come up with a solution. 
+If you have a keen eye you may have noticed a problem, when we render our template we are completely replacing the html inside #main with the text of our template. This destroys our elements and creates new ones. The browser doesn't realise that the element has transitioned states and it doesn't know to animate it. We could use a bunch of JavaScript to animate it instead, or to hack at this problem to make it transition. But that sounds messy - in fact it is messy. Let's not do that. Let's come up with a solution.
+
+===========================
+       Thoughts
+===========================
+
+  * Rain only outputs HTML and supports no other document format. They are closely bound together. This gives Rain more power. It is not a general text template language.
+  * Rain is smart. Rain can attach itself to objects so that it listens for changes or additions.
+  * Rain is Coffee. It looks and acts like CoffeeScript, as a templating language.
+  * Rain is accessible by people who don't know Rain - ie designers/other front end developers/etc
+  * Rain works by convention over configuration
+  * Rain is DOM-aware. It will update attributes.
+  * Rain is Event-aware. You can bind to events via the Rain template
+  * 
