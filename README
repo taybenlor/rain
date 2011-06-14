@@ -1,0 +1,57 @@
+Rain is a smart templating language for make funky client-heavy websites.
+
+Right now Rain is in the planning stage.
+
+Let's go over what Rain is by explaining what Rain is trying to achieve.
+
+===========================
+       The Problem
+===========================
+
+Using client-heavy JavaScript libraries like Backbone, Spine, Knockout etc is fun. It's relatively trivial to make your boring static page come alive. You can make a live-shareable task list in minutes. You can make incredibly responsive websites that respond to actions instantly - because they don't need to hit the server. I'm sure you understand what I'm talking about. Unfortunately theres a few problems with all of this. The problem is view logic.
+
+Suppose you have a task list:
+
+    <ul id="tasks">
+      <li>Eat Apples</li>
+      <li>Clean Room</li>
+      <li>Make Cookies</li>
+    </ul> 
+
+You set this up in your templating language of choice (syntax is erb vs coffeescript in this case) to be rendered on the client side:
+
+    <ul id="tasks">
+      <% tasks.each (task)-> %>
+        <% unless task.done %>
+          <li><%= task.text %></li>
+        <% end %>
+      <% end %>
+    </ul>
+    
+Then you render it `$("#main").html(TaskList.render())`. But -oh no- you have just received a message from the server. One of these tasks has been finished and so your tasks array is now obsolete. Time to re-render the template. Not a problem. The task magically disappears as the whole template is re-rendered. Unfortunately that was a little jerky. There wasn't even any user feedback. So, let's animate this, because we are super up to date with the web - we're going to use CSS3. So, to make things cleaner we will use stateful classes.
+
+    <ul id="tasks">
+      <% tasks.each (task)-> %>
+        <% if task.done %>
+          <li class="done"><%= task.text %></li>
+        <% else %>
+          <li><%= task.text %></li>
+        <% end %>
+      <% end %>
+    </ul>
+
+and we do this in css:
+
+    #tasks .done{
+      background: yellow;
+      height: 0px;
+      opacity: 0;
+    }
+    
+    #tasks li{
+      -webkit-transform: background 0.5s ease, height 1s ease, opacity 1s ease; 
+    }
+
+This way when it is re-rendered the task will turn yellow, shrink and fade away. So we call re-render, but -oh- instead of fading away the element simply disappears. Shock! Horror!
+
+If you have a keen eye you may have noticed a problem, when we render our template we are completely replacing the html inside #main with the text of our template. This destroys our elements and creates new ones. The browser doesn't realise that the element has transitioned states and it doesn't know to animate it. We could use a bunch of JavaScript to animate it instead, or to hack at this problem to make it transition. But that sounds messy - in fact it is messy. Let's not do that. Let's come up with a solution. 
